@@ -31,5 +31,5 @@ const adminSchema = new mongoose.Schema({
     })
 
 
-module.exports = mongoose.model('admins', adminSchema, 'admins');
+module.exports = mongoose.model('companies', adminSchema, 'companies');
 

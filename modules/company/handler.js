@@ -13,7 +13,7 @@ const create = async (request, h) => {
     try {
         let payload = request.payload
         payload.slug = Utils.slugify(payload.name);
-        let model = Mongoose.models.admins;
+        let model = Mongoose.models.Companies;
         let query = { email: payload.email, is_deleted: false };
         let isExist = await Operation.EXIST(model, query);
         if (isExist) {
@@ -29,7 +29,7 @@ const create = async (request, h) => {
 
 const login = async (request, h) => {
     try {
-        let model = Mongoose.models.admins;
+        let model = Mongoose.models.Companies;
         let payload = request.payload
         let query = { email: payload.email, is_deleted: false, account_status:  accountStatus.Approved};
         let isExist = await Operation.EXIST(model, query);

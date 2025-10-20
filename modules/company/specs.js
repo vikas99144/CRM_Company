@@ -11,7 +11,7 @@ module.exports = {
        acl: {
         description: 'Add acl',
         notes: 'Add acl',
-        tags: ['Admin', "api"],
+        tags: ['Company', "api"],
         plugins: {
             'hapi-swagger': {
                 responses: {
@@ -32,7 +32,7 @@ module.exports = {
                 assign: 'token'
             },
             {
-                method: userAuth.checkRoleAccess(["superadmin","admin"]),
+                method: userAuth.checkRoleAccess(["superCompany","Company"]),
                 assign: 'checkRoleAccess'
             }
         ],
@@ -45,7 +45,7 @@ module.exports = {
     create: {
         description: 'Add',
         notes: 'Add',
-        tags: ['Admin', "api"],
+        tags: ['Company', "api"],
         plugins: {
             'hapi-swagger': {
                 responses: {
@@ -66,7 +66,7 @@ module.exports = {
             //     assign: 'token'
             // },
             {
-                method: userAuth.checkRoleAccess(["superadmin"]),
+                method: userAuth.checkRoleAccess(["superCompany"]),
                 assign: 'checkRoleAccess'
             }
         ],
@@ -79,7 +79,7 @@ module.exports = {
     login: {
         description: 'Login',
         notes: 'Login',
-        tags: ['Admin', "api"],
+        tags: ['Company', "api"],
         plugins: {
             'hapi-swagger': {
                 responses: {
@@ -103,7 +103,7 @@ module.exports = {
     view: {
         description: 'View',
         notes: 'View',
-        tags: ['Admin', "api"],
+        tags: ['Company', "api"],
         plugins: {
             'hapi-swagger': {
                 responses: {
@@ -124,7 +124,7 @@ module.exports = {
                 assign: 'token'
             },
             {
-                method: userAuth.checkRoleAccess(["admin", "superadmin"]),
+                method: userAuth.checkRoleAccess(["Company", "superCompany"]),
                 assign: 'checkRoleAccess'
             }
         ],
@@ -137,7 +137,7 @@ module.exports = {
     list: {
         description: 'List',
         notes: 'List',
-        tags: ['Admin', "api"],
+        tags: ['Company', "api"],
         plugins: {
             'hapi-swagger': {
                 responses: {
@@ -158,7 +158,7 @@ module.exports = {
                 assign: 'token'
             },
             {
-                method: userAuth.checkRoleAccess(["admin", "superadmin"]),
+                method: userAuth.checkRoleAccess(["Company", "superCompany"]),
                 assign: 'checkRoleAccess'
             }
         ],
@@ -171,7 +171,7 @@ module.exports = {
     remove: {
         description: 'Delete',
         notes: 'Delete',
-        tags: ['Admin', "api"],
+        tags: ['Company', "api"],
         plugins: {
             'hapi-swagger': {
                 responses: {
@@ -192,7 +192,7 @@ module.exports = {
                 assign: 'token'
             },
             {
-                method: userAuth.checkRoleAccess(["admin", "superadmin"]),
+                method: userAuth.checkRoleAccess(["Company", "superCompany"]),
                 assign: 'checkRoleAccess'
             }
         ],
@@ -205,7 +205,7 @@ module.exports = {
     status: {
         description: 'Status',
         notes: 'Status',
-        tags: ['Admin', "api"],
+        tags: ['Company', "api"],
         plugins: {
             'hapi-swagger': {
                 responses: {
@@ -226,7 +226,7 @@ module.exports = {
                 assign: 'token'
             },
             {
-                method: userAuth.checkRoleAccess(["admin", "superadmin"]),
+                method: userAuth.checkRoleAccess(["Company", "superCompany"]),
                 assign: 'checkRoleAccess'
             }
         ],
@@ -240,7 +240,7 @@ module.exports = {
     update: {
         description: 'Update',
         notes: 'Update',
-        tags: ['Admin', "api"],
+        tags: ['Company', "api"],
         plugins: {
             'hapi-swagger': {
                 responses: {
@@ -261,7 +261,7 @@ module.exports = {
                 assign: 'token'
             },
             {
-                method: userAuth.checkRoleAccess(["admin", "superadmin"]),
+                method: userAuth.checkRoleAccess(["Company", "superCompany"]),
                 assign: 'checkRoleAccess'
             }
         ],
