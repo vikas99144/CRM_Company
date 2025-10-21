@@ -1,7 +1,7 @@
 'use strict'
 const mongoose = require("mongoose");
 const roleSchema = new mongoose.Schema({
-    name: { type: String, required: true }, // e.g., 'owner', 'manager' "employee"
+    name: { type: String, required: true }, // e.g., 'owner', 'manager' "employee" "accountant"
     slug: { type: String, required: true },
     description: { type: String },
     permissions: [String],  // e.g. ['read', 'write', 'delete']
