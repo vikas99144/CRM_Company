@@ -2,13 +2,14 @@
 const mongoose = require("mongoose");
 const { accountStatus } = require("../../constant/enum");
 
-const adminSchema = new mongoose.Schema({
-    name: { type: String, required: true },
+const companySchema = new mongoose.Schema({
+    company_name: { type: String, required: true },
     id: {type: String},
     slug: { type: String, required: true },
     email: { type: String, required: true },
     country_code: { type: String, required: true },
     contact_number: { type: String, required: true },
+    industry: {type: String},
     role: {type: mongoose.Schema.Types.ObjectId,ref: 'roles',required: true},
     token: { type: String, default: null },
     pwd: { type: String },
@@ -31,5 +32,5 @@ const adminSchema = new mongoose.Schema({
     })
 
 
-module.exports = mongoose.model('companies', adminSchema, 'companies');
+module.exports = mongoose.model('companies', companySchema, 'companies');
 

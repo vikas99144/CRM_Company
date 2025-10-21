@@ -7,4 +7,11 @@ const accountStatus = {
      "Approved": "Approved"
 }
 
+const industry = {
+    CLOTH: "CLOTH",
+    ELECTRONICS: "ELECTRONICS",
+    SHOES: "SHOES"
+}
+
 exports.accountStatus = accountStatus;
+exports.industry = industry;

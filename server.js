@@ -33,6 +33,7 @@ if (cluster.isMaster) {
   server = new hapi.server({
     port: serverConfig.webServer.port,
     host: serverConfig.host,
+    debug: { request: ['error'] },
     routes: {
       cors: {
         origin: ['*'],
