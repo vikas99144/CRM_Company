@@ -3,13 +3,33 @@
 const Operation = require("../../operations");
 const Mongoose = require("mongoose");
 const { createToken } = require("../../auth/auth");
-const { getHash, count } = require("../../helpers");
+const { getHash, count, generateOTP } = require("../../helpers");
 const { ObjectId } = require("../../utils");
 
-exports.create = async (data, h) => {
+
+
+exports.sendOTP = async (data, h) => {
+    let model = Mongoose.models.otps;
+    data.otp = generateOTP(6);
+    data.otp_for = "number";
+    // Integrate to send otp
+    let result =  await Operation.CREATE(model, data);
+    return {otp_id: result._id};
+}
+
+
+exports.verifyOTP = async (data, h) => {
+    let model = Mongoose.models.otps;
+    let query = {_id: ObjectId(data.otp_id)}
+    let update = {is_deleted: true}
+    await Operation.SOFT_DELETE(model, query,update);
+    return {};
+}
+
+exports.register = async (data, h) => {
     let model = Mongoose.models.admins;
     data.pwd = await getHash(data.pwd);
-    data.id = `ADM_${await count("admin")}`;
+    data.id = `COM_${await count("company")}`;
     return await Operation.CREATE(model, data);
 }
 

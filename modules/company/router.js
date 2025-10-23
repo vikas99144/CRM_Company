@@ -4,11 +4,17 @@ const handler = require('./handler');
 const specs = require('./specs');
 
 module.exports = [
+      {
+        method: 'POST',
+        path: '/api/v1/company/send-otp',
+        options: specs.sendOTP,
+        handler: handler.sendOTP
+    },
     {
         method: 'POST',
-        path: '/api/v1/company/create',
-        options: specs.create,
-        handler: handler.create
+        path: '/api/v1/company/register',
+        options: specs.register,
+        handler: handler.register
     },
     {
         method: 'POST',

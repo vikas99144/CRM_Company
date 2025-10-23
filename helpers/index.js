@@ -21,7 +21,15 @@ const count = async (name) => {
     return result.count;
 }
 
+const generateOTP = (length = 6) => {
+  const min = Math.pow(10, length - 1);
+  const max = Math.pow(10, length) - 1;
+  // return Math.floor(min + Math.random() * (max - min));
+  return "123456";
+};
+
 
 exports.count = count;
 exports.getHash = getHash;
+exports.generateOTP = generateOTP;
 exports.compareHash = compareHash;

@@ -9,7 +9,50 @@ const controller = require('./controller');
 const Response = require("../../response");
 
 
-const create = async (request, h) => {
+const sendOTP = async (request, h) => {
+    try {
+        let payload = request.payload
+        let model = Mongoose.models.otps;
+        let query = { country_code: payload.country_code, contact_number: payload.contact_number, is_deleted: false };
+        if (payload.send_for == "signup") {
+            let isExist = await Operation.EXIST(model, query);
+            if (isExist) {
+                return Response.validation(h, Lang.COMPANY_ALREADY_EXIST);
+            }
+        }
+        const result = await controller.sendOTP(payload, h);
+        return Response.success(h, Lang.OTP_SEND_SUCCESS, result);
+    } catch (err) {
+        console.log(err)
+        return Response.internalServer(h, err.message);
+    }
+}
+
+
+const verifyOTP = async (request, h) => {
+    try {
+        let payload = request.payload
+        let model = Mongoose.models.Companies;
+        let query = { _id: Utils.ObjectId(payload.otp_id), is_deleted: false };
+        let isExist = await Operation.EXIST(model, query);
+        if (!isExist) {
+            return Response.validation(h, Lang.OTP_EXPIRED);
+        }
+
+        if (isExist.otp !== payload.otp) {
+            return Response.validation(h, Lang.OTP_INVALID);
+        }
+
+        const result = await controller.verifyOTP(payload, h);
+        return Response.success(h, Lang.OTP_SEND_SUCCESS, {});
+    } catch (err) {
+        console.log(err)
+        return Response.internalServer(h, err.message);
+    }
+}
+
+
+const register = async (request, h) => {
     try {
         let payload = request.payload
         payload.slug = Utils.slugify(payload.name);
@@ -19,7 +62,7 @@ const create = async (request, h) => {
         if (isExist) {
             return Response.validation(h, Lang.ADMIN_EXISTS);
         }
-        const result = await controller.create(payload, h);
+        const result = await controller.register(payload, h);
         return Response.success(h, Lang.ADMIN_CREATE_SUCCESS, payload);
     } catch (err) {
         console.log(err)
@@ -31,7 +74,7 @@ const login = async (request, h) => {
     try {
         let model = Mongoose.models.Companies;
         let payload = request.payload
-        let query = { email: payload.email, is_deleted: false, account_status:  accountStatus.Approved};
+        let query = { email: payload.email, is_deleted: false, account_status: accountStatus.Approved };
         let isExist = await Operation.EXIST(model, query);
         if (!isExist) {
             return Response.validation(h, Lang.USER_NOT_FOUND);
@@ -105,10 +148,12 @@ const update = async (request, h) => {
 }
 
 
+
 exports.view = view;
 exports.list = list;
 exports.login = login;
-exports.create = create;
 exports.status = status;
 exports.remove = remove;
 exports.update = update;
+exports.sendOTP = sendOTP;
+exports.register = register;

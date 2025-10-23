@@ -7,22 +7,31 @@ module.exports = {
 
     acl: {
         payload: Joi.object({
-            admin_id: Joi.string().required().description('Admin id is required'),
-            acl: Joi.array().min(1).required().description('Acl is required')
+            admin_id: Joi.string().required().label('Admin id is required'),
+            acl: Joi.array().min(1).required().label('Acl is required')
         })
     },
 
-    create: {
+
+    sendOTP: {
         payload: Joi.object({
-            name: Joi.string().required().description('Name is required'),
-            email: Joi.string().required().email().description('Email is required'),
-            country_code: Joi.string().required().description('Country code is required'),
-            contact_number: Joi.string().required().description('Country number is required'),
-            role: Joi.string().required().description('Role is required'),
+            send_for: Joi.string().required().label('OTP send for required'),
+            country_code: Joi.string().required().label('Country code is required'),
+            contact_number: Joi.string().required().label('contact number is required')
+        })
+    },
+
+    register: {
+        payload: Joi.object({
+            name: Joi.string().required().label('Name is required'),
+            email: Joi.string().required().email().label('Email is required'),
+            country_code: Joi.string().required().label('Country code is required'),
+            contact_number: Joi.string().required().label('Country number is required'),
+            role: Joi.string().required().label('Role is required'),
             pwd: Joi.string()
                 .pattern(new RegExp('^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[#?!@$%^&*-]).{8,}$'))
                 .required()
-                .description('Password is required')
+                .label('Password is required')
                 .messages({
                     'string.pattern.base': 'Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, one digit, and one special character.'
                 })
@@ -31,7 +40,7 @@ module.exports = {
 
     login: {
         payload: Joi.object({
-            email: Joi.string().required().email().description('Email is required'),
+            email: Joi.string().required().email().label('Email is required'),
             pwd: Joi.string()
                 .required()
                 .label('Password is required')
@@ -40,13 +49,13 @@ module.exports = {
 
     view: {
         params: Joi.object({
-            admin_id: Joi.string().required().description('Admin id is required'),
+            admin_id: Joi.string().required().label('Admin id is required'),
         })
     },
 
     remove: {
         params: Joi.object({
-            admin_id: Joi.string().required().description('Admin id is required'),
+            admin_id: Joi.string().required().label('Admin id is required'),
         })
     },
 
@@ -61,13 +70,13 @@ module.exports = {
 
     status: {
         params: Joi.object({
-            admin_id: Joi.string().required().description('Admin id is required')
+            admin_id: Joi.string().required().label('Admin id is required')
         }),
         payload: Joi.object({
             status: Joi.string()
                 .required()
                 .valid('active', 'inactive')
-                .description('Status is required')
+                .label('Status is required')
                 .messages({
                     'any.only': 'Invalid status: must be either active or inactive'
                 })
@@ -76,13 +85,13 @@ module.exports = {
 
     remove: {
         params: Joi.object({
-            admin_id: Joi.string().required().description('Admin id is required')
+            admin_id: Joi.string().required().label('Admin id is required')
         })
     },
 
     status: {
         params: Joi.object({
-            admin_id: Joi.string().required().description('Admin id is required')
+            admin_id: Joi.string().required().label('Admin id is required')
         }),
         payload: Joi.object({
             name: Joi.string()

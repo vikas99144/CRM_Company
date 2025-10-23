@@ -8,7 +8,31 @@ const response = require("../../response");
 
 module.exports = {
 
-       acl: {
+    sendOTP: {
+        description: 'Add acl',
+        notes: 'Add acl',
+        tags: ['Company', "api"],
+        plugins: {
+            'hapi-swagger': {
+                responses: {
+                    200: {
+                        description: 'Example of response model in return to success request',
+                        schema: validator.success
+                    },
+                    320: {
+                        description: 'Example of response model in return to failure request',
+                        schema: validator.failure
+                    }
+                }
+            }
+        },
+        validate: {
+            payload: validator.sendOTP.payload,
+            failAction: response.failAction
+        }
+    },
+
+    acl: {
         description: 'Add acl',
         notes: 'Add acl',
         tags: ['Company', "api"],
@@ -32,7 +56,7 @@ module.exports = {
                 assign: 'token'
             },
             {
-                method: userAuth.checkRoleAccess(["superCompany","Company"]),
+                method: userAuth.checkRoleAccess(["superCompany", "Company"]),
                 assign: 'checkRoleAccess'
             }
         ],
@@ -42,7 +66,7 @@ module.exports = {
         }
     },
 
-    create: {
+    register: {
         description: 'Add',
         notes: 'Add',
         tags: ['Company', "api"],

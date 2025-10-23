@@ -5,6 +5,7 @@
 	"INCORRECT_CREDENTIALS": "Incorrect credentials.",
 	"UNAUTHORIZED_ACCESS":"Unauthorized access.",
 	"OTP_EXPIRED": "OTP Expired!",
+	"OTP_INVALID": "Invalid OTP",
 	"MOB_NO_NOT_EXIST_OR_OTP_INVALID": "Mobile Number don't exists! or OTP is invalid!",
 	"PASSWORD_RESET_SUCCESS": "Password Reset Successfully!",
 	"NO_DATA_FOUND": "No Data Found!",
@@ -16,11 +17,11 @@
 	"ROLE_CREATE_SUCCESS": "Role created successfully.",
 	"ROLE_EXISTS":"Role already exists.",
 	"ROLE_NOT_EXIST":"Role not exists.",
-	"ADMIN_CREATE_SUCCESS": "Admin created successfully.",
-	"ADMIN_EXISTS":"Admin already exists.",
 	"USER_NOT_FOUND":"User not found.",
 	"LOGIN_SUCCESS":"Login successfully.",
 	"ALREADY_EXIST": "Already exist.",
+	"COMPANY_ALREADY_EXIST":"Company already exist",
+	"OTP_SEND_SUCCESS":"OTP send successfully.",
 	"CREATE_SUCCESS": "Created successfully.",
 	"ACL_ADD_SUCCESS":"Acl added successfully."
 }
