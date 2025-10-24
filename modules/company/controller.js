@@ -13,24 +13,60 @@ exports.sendOTP = async (data, h) => {
     data.otp = generateOTP(6);
     data.otp_for = "number";
     // Integrate to send otp
-    let result =  await Operation.CREATE(model, data);
-    return {otp_id: result._id};
+    let result = await Operation.CREATE(model, data);
+    return { otp_id: result._id, contry_code: data.contry_code, contact_number: data.contact_number };
 }
 
 
 exports.verifyOTP = async (data, h) => {
-    let model = Mongoose.models.otps;
-    let query = {_id: ObjectId(data.otp_id)}
-    let update = {is_deleted: true}
-    await Operation.SOFT_DELETE(model, query,update);
-    return {};
+    let model = Mongoose.models.otps, token = null;
+    let query = { _id: ObjectId(data.otp_id) }
+    let update = { is_deleted: true }
+    let result = await Operation.SOFT_DELETE(model, query, update);
+    if (data.otp_for == "signup") {
+        let model = Mongoose.models.temp_companies, matchQuery = {};
+        matchQuery = { contry_code: result.country_code, contact_number: result.contact_number };
+        let aggregateQuery = [
+            {
+                $match: matchQuery
+            }
+        ]
+        let temp_company = await Operation.GET(model, aggregateQuery);
+        let createCompany = {
+            company_name: temp_company[0].company_name,
+            id: temp_company[0].id,
+            slug: temp_company[0].slug,
+            email: temp_company[0].email,
+            country_code: temp_company[0].country_code,
+            contact_number: temp_company[0].contact_number,
+            industry: temp_company[0].industry,
+            role: temp_company[0].role,
+            pwd: temp_company[0].pwd
+        }
+        let company = await Operation.CREATE(model, createCompany);
+        token = createToken(company._id, company.role);
+        await Operation.HARD_DELETE({ _id: temp_company[0]._id });
+        return { 
+            otp_for: data.otp_for, 
+            token: token, 
+            company_name: company.company_name, 
+            country_code: company.country_code,
+            contact_number: company.contact_number,
+            email: company.email 
+        };
+    } else {
+        return { otp_for: data.otp_for, token: token };
+    }
+
 }
 
 exports.register = async (data, h) => {
-    let model = Mongoose.models.admins;
+    let model = Mongoose.models.temp_companies;
     data.pwd = await getHash(data.pwd);
     data.id = `COM_${await count("company")}`;
-    return await Operation.CREATE(model, data);
+    let otp = await this.sendOTP(data, h);
+    let result = await Operation.CREATE(model, data);
+    return otp;
 }
 
 exports.login = async (data, h) => {

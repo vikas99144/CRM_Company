@@ -56,7 +56,7 @@ const register = async (request, h) => {
     try {
         let payload = request.payload
         payload.slug = Utils.slugify(payload.name);
-        let model = Mongoose.models.Companies;
+        let model = Mongoose.models.companies;
         let query = { email: payload.email, is_deleted: false };
         let isExist = await Operation.EXIST(model, query);
         if (isExist) {
@@ -147,8 +147,6 @@ const update = async (request, h) => {
     }
 }
 
-
-
 exports.view = view;
 exports.list = list;
 exports.login = login;
@@ -157,3 +155,4 @@ exports.remove = remove;
 exports.update = update;
 exports.sendOTP = sendOTP;
 exports.register = register;
+exports.verifyOTP = verifyOTP;

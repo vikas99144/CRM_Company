@@ -21,6 +21,16 @@ module.exports = {
         })
     },
 
+    
+    
+    verifyOTP: {
+        payload: Joi.object({
+            otp_id: Joi.string().required().label('Otp id is required'),
+            otp_for: Joi.string().required().label('OTP for is required'),
+            otp: Joi.string().required().label('OTP is required')
+        })
+    },
+
     register: {
         payload: Joi.object({
             name: Joi.string().required().label('Name is required'),

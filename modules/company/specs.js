@@ -32,6 +32,31 @@ module.exports = {
         }
     },
 
+
+    verifyOTP: {
+        description: 'Verify OTP',
+        notes: 'Verify OTP',
+        tags: ['Company', "api"],
+        plugins: {
+            'hapi-swagger': {
+                responses: {
+                    200: {
+                        description: 'Example of response model in return to success request',
+                        schema: validator.success
+                    },
+                    320: {
+                        description: 'Example of response model in return to failure request',
+                        schema: validator.failure
+                    }
+                }
+            }
+        },
+        validate: {
+            payload: validator.verifyOTP.payload,
+            failAction: response.failAction
+        }
+    },
+
     acl: {
         description: 'Add acl',
         notes: 'Add acl',
@@ -90,12 +115,12 @@ module.exports = {
             //     assign: 'token'
             // },
             {
-                method: userAuth.checkRoleAccess(["superCompany"]),
+                method: userAuth.checkRoleAccess(["company"]),
                 assign: 'checkRoleAccess'
             }
         ],
         validate: {
-            payload: validator.create.payload,
+            payload: validator.register.payload,
             failAction: response.failAction
         }
     },

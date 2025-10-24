@@ -10,6 +10,12 @@ module.exports = [
         options: specs.sendOTP,
         handler: handler.sendOTP
     },
+          {
+        method: 'POST',
+        path: '/api/v1/company/verify-otp',
+        options: specs.verifyOTP,
+        handler: handler.verifyOTP
+    },
     {
         method: 'POST',
         path: '/api/v1/company/register',

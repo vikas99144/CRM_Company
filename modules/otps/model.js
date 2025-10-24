@@ -1,9 +1,12 @@
+
 'use strict'
 const mongoose = require("mongoose");
 const otpSchema = new mongoose.Schema({
     otp: { type: String, required: true },
-    id:{type: String, default: null},
-    otp_for: { type: String, enum:["email","number"], default: "number" },
+    country_code: { type: String },
+    contact_number: { type: String },
+    email: { type: String },
+    otp_for: { type: String, enum: ["email", "number"], default: "number" },
     is_deleted: { type: Boolean, default: false },
     created_at: { type: Date, default: Date.now, expires: 300 }
 },
