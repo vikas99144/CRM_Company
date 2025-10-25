@@ -6,25 +6,25 @@ const specs = require('./specs');
 module.exports = [
     {
         method: 'POST',
-        path:'/api/v1/setting/add',
+        path:'/setting/add',
         options: specs.add,
         handler: handler.add
     },
     {
         method: 'GET',
-        path:'/api/v1/view/view/{id}',
+        path:'/view/view/{id}',
         options: specs.view,
         handler: handler.view
     },
     {
         method: 'PATCH',
-        path:'/api/v1/setting/update',
+        path:'/setting/update',
         options: specs.update,
         handler: handler.update
     },
       {
         method: 'POST',
-        path:'/api/v1/setting/encrytdecrypt',
+        path:'/setting/encrytdecrypt',
         options: specs.encrytdecrypt,
         handler: handler.encrytdecrypt
     }
