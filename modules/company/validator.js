@@ -12,7 +12,6 @@ module.exports = {
         })
     },
 
-
     sendOTP: {
         payload: Joi.object({
             send_for: Joi.string().required().label('OTP send for required'),
@@ -21,13 +20,33 @@ module.exports = {
         })
     },
 
-    
-    
     verifyOTP: {
         payload: Joi.object({
             otp_id: Joi.string().required().label('Otp id is required'),
             otp_for: Joi.string().required().label('OTP for is required'),
             otp: Joi.string().required().label('OTP is required')
+        })
+    },
+
+    changePassword: {
+        params: Joi.object({
+            company_id: Joi.string().required().label('Company id is required')
+        }),
+        payload: Joi.object({
+            old_pwd: Joi.string()
+                .pattern(new RegExp('^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[#?!@$%^&*-]).{8,}$'))
+                .required()
+                .label('Password is required')
+                .messages({
+                    'string.pattern.base': 'Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, one digit, and one special character.'
+                }),
+            new_pwd: Joi.string()
+                .pattern(new RegExp('^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[#?!@$%^&*-]).{8,}$'))
+                .required()
+                .label('Password is required')
+                .messages({
+                    'string.pattern.base': 'Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, one digit, and one special character.'
+                })
         })
     },
 
@@ -37,7 +56,6 @@ module.exports = {
             email: Joi.string().required().email().label('Email is required'),
             country_code: Joi.string().required().label('Country code is required'),
             contact_number: Joi.string().required().label('Country number is required'),
-            role: Joi.string().required().label('Role is required'),
             pwd: Joi.string()
                 .pattern(new RegExp('^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[#?!@$%^&*-]).{8,}$'))
                 .required()
@@ -59,13 +77,13 @@ module.exports = {
 
     view: {
         params: Joi.object({
-            admin_id: Joi.string().required().label('Admin id is required'),
+            company_id: Joi.string().required().label('Company id is required'),
         })
     },
 
     remove: {
         params: Joi.object({
-            admin_id: Joi.string().required().label('Admin id is required'),
+            company_id: Joi.string().required().label('Company id is required'),
         })
     },
 
@@ -80,7 +98,7 @@ module.exports = {
 
     status: {
         params: Joi.object({
-            admin_id: Joi.string().required().label('Admin id is required')
+            company_id: Joi.string().required().label('Company id is required')
         }),
         payload: Joi.object({
             status: Joi.string()
@@ -95,13 +113,13 @@ module.exports = {
 
     remove: {
         params: Joi.object({
-            admin_id: Joi.string().required().label('Admin id is required')
+            company_id: Joi.string().required().label('Company id is required')
         })
     },
 
     status: {
         params: Joi.object({
-            admin_id: Joi.string().required().label('Admin id is required')
+            company_id: Joi.string().required().label('Company id is required')
         }),
         payload: Joi.object({
             name: Joi.string()

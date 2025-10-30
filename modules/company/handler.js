@@ -101,25 +101,6 @@ const view = async (request, h) => {
     }
 }
 
-const list = async (request, h) => {
-    try {
-        const result = await controller.list(request.query);
-        return Response.list(h, result.data, result.total);
-    } catch (err) {
-        return Response.internalServer(h, err.message);
-    }
-}
-
-const status = async (request, h) => {
-    try {
-        const result = await controller.status({ admin_id: request.params.admin_id, ...request.payload });
-        return Response.success(h, Lang.UPDATE_SUCCESS, result);
-    } catch (err) {
-        console.log(err);
-        return Response.internalServer(h, err.message);
-    }
-}
-
 const remove = async (request, h) => {
     try {
         const result = await controller.remove(request.params);
@@ -130,6 +111,26 @@ const remove = async (request, h) => {
 }
 
 const update = async (request, h) => {
+    try {
+        let payload = request.payload;
+        payload.company_id = request.params.company_id;
+        payload.slug = Utils.slugify(payload.company_name);
+        let model = Mongoose.models.companies;
+        let query = { slug: payload.slug, _id: {$ne: Utils.ObjectId(payload.company_id)}, is_deleted: false };
+        let isExist = await Operation.EXIST(model, query);
+        if (isExist) {
+            return Response.validation(h, Lang.COMPANY_ALREADY_EXIST);
+        }
+        const result = await controller.update(payload);
+        return Response.success(h, Lang.UPDATE_SUCCESS, result);
+    } catch (err) {
+        return Response.internalServer(h, err.message);
+    }
+}
+
+
+
+const changePassword = async (request, h) => {
     try {
         let payload = request.payload;
         payload.id = request.params.id;
@@ -148,11 +149,10 @@ const update = async (request, h) => {
 }
 
 exports.view = view;
-exports.list = list;
 exports.login = login;
-exports.status = status;
 exports.remove = remove;
 exports.update = update;
 exports.sendOTP = sendOTP;
 exports.register = register;
 exports.verifyOTP = verifyOTP;
+exports.changePassword = changePassword;

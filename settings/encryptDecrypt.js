@@ -38,7 +38,6 @@ module.exports.configure = async (server) => {
         request.response.headers["content-type"].includes("application/json")
       ) {
 
-
         let payload;
         if (typeof response.source !== 'undefined') {
           payload = response.source;

@@ -4,8 +4,6 @@ const validator = require('./validator');
 const userAuth = require('../../auth/auth');
 const response = require("../../response");
 
-
-
 module.exports = {
 
     sendOTP: {
@@ -31,7 +29,6 @@ module.exports = {
             failAction: response.failAction
         }
     },
-
 
     verifyOTP: {
         description: 'Verify OTP',
@@ -143,8 +140,46 @@ module.exports = {
                 }
             }
         },
+        pre: [
+            // {
+            //     method: userAuth.verifyToken,
+            //     assign: 'token'
+            // },
+        ],
         validate: {
             payload: validator.login.payload,
+            failAction: response.failAction
+        }
+    },
+
+
+    changePassword: {
+        description: 'Change Password',
+        notes: 'Change Password',
+        tags: ['Company', "api"],
+        plugins: {
+            'hapi-swagger': {
+                responses: {
+                    200: {
+                        description: 'Example of response model in return to success request',
+                        schema: validator.success
+                    },
+                    320: {
+                        description: 'Example of response model in return to failure request',
+                        schema: validator.failure
+                    }
+                }
+            }
+        },
+        pre: [
+            {
+                method: userAuth.checkRoleAccess(["company"]),
+                assign: 'checkRoleAccess'
+            }
+        ],
+        validate: {
+            payload: validator.changePassword.payload,
+            params: validator.changePassword.params,
             failAction: response.failAction
         }
     },
@@ -183,40 +218,6 @@ module.exports = {
         }
     },
 
-    list: {
-        description: 'List',
-        notes: 'List',
-        tags: ['Company', "api"],
-        plugins: {
-            'hapi-swagger': {
-                responses: {
-                    200: {
-                        description: 'Example of response model in return to success request',
-                        schema: validator.success
-                    },
-                    320: {
-                        description: 'Example of response model in return to failure request',
-                        schema: validator.failure
-                    }
-                }
-            }
-        },
-        pre: [
-            {
-                method: userAuth.verifyToken,
-                assign: 'token'
-            },
-            {
-                method: userAuth.checkRoleAccess(["Company", "superCompany"]),
-                assign: 'checkRoleAccess'
-            }
-        ],
-        validate: {
-            query: validator.list.query,
-            failAction: response.failAction
-        }
-    },
-
     remove: {
         description: 'Delete',
         notes: 'Delete',
@@ -251,41 +252,6 @@ module.exports = {
         }
     },
 
-    status: {
-        description: 'Status',
-        notes: 'Status',
-        tags: ['Company', "api"],
-        plugins: {
-            'hapi-swagger': {
-                responses: {
-                    200: {
-                        description: 'Example of response model in return to success request',
-                        schema: validator.success
-                    },
-                    320: {
-                        description: 'Example of response model in return to failure request',
-                        schema: validator.failure
-                    }
-                }
-            }
-        },
-        pre: [
-            {
-                method: userAuth.verifyToken,
-                assign: 'token'
-            },
-            {
-                method: userAuth.checkRoleAccess(["Company", "superCompany"]),
-                assign: 'checkRoleAccess'
-            }
-        ],
-        validate: {
-            params: validator.status.params,
-            payload: validator.status.payload,
-            failAction: response.failAction
-        }
-    },
-
     update: {
         description: 'Update',
         notes: 'Update',
@@ -310,13 +276,48 @@ module.exports = {
                 assign: 'token'
             },
             {
-                method: userAuth.checkRoleAccess(["Company", "superCompany"]),
+                method: userAuth.checkRoleAccess(["Company"]),
                 assign: 'checkRoleAccess'
             }
         ],
         validate: {
             params: validator.status.params,
             payload: validator.status.payload,
+            failAction: response.failAction
+        }
+    },
+
+    changePassword: {
+        description: 'Change Password',
+        notes: 'Change Password',
+        tags: ['Company', "api"],
+        plugins: {
+            'hapi-swagger': {
+                responses: {
+                    200: {
+                        description: 'Example of response model in return to success request',
+                        schema: validator.success
+                    },
+                    320: {
+                        description: 'Example of response model in return to failure request',
+                        schema: validator.failure
+                    }
+                }
+            }
+        },
+        pre: [
+            {
+                method: userAuth.verifyToken,
+                assign: 'token'
+            },
+            {
+                method: userAuth.checkRoleAccess(["Company"]),
+                assign: 'checkRoleAccess'
+            }
+        ],
+        validate: {
+            params: validator.changePassword.params,
+            payload: validator.changePassword.payload,
             failAction: response.failAction
         }
     },
