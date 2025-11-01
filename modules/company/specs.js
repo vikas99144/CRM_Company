@@ -214,7 +214,6 @@ module.exports = {
         }
     },
 
-
     resetPassword: {
         description: 'Reset Password',
         notes: 'Reset Password',
@@ -379,6 +378,41 @@ module.exports = {
         validate: {
             params: validator.changePassword.params,
             payload: validator.changePassword.payload,
+            failAction: response.failAction
+        }
+    },
+
+    changeNumber: {
+        description: 'Change Contact Number',
+        notes: 'Change Contact Number',
+        tags: ['Company', "api"],
+        plugins: {
+            'hapi-swagger': {
+                responses: {
+                    200: {
+                        description: 'Example of response model in return to success request',
+                        schema: validator.success
+                    },
+                    320: {
+                        description: 'Example of response model in return to failure request',
+                        schema: validator.failure
+                    }
+                }
+            }
+        },
+        pre: [
+            {
+                method: userAuth.verifyToken,
+                assign: 'token'
+            },
+            {
+                method: userAuth.checkRoleAccess(["company"]),
+                assign: 'checkRoleAccess'
+            }
+        ],
+        validate: {
+            params: validator.changeNumber.params,
+            payload: validator.changeNumber.payload,
             failAction: response.failAction
         }
     },

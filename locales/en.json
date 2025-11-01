@@ -9,6 +9,7 @@
 	"OTP_INVALID": "Invalid OTP",
 	"MOB_NO_NOT_EXIST_OR_OTP_INVALID": "Mobile Number don't exists! or OTP is invalid!",
 	"PASSWORD_RESET_SUCCESS": "Password Reset Successfully!",
+	"NUBER_CHANGE_SUCCESS":"Contact number changed successfully.",
 	"NO_DATA_FOUND": "No Data Found!",
 	"DATA_SUCCESS": "Data Found!",
 	"VIEW_SUCCESS": "Get data successfully.",

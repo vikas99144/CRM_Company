@@ -47,6 +47,12 @@ module.exports = [
         handler: handler.resetPassword
     },
     {
+        method: 'POST',
+        path: '/api/v1/company/change-number/{company_id}',
+        options: specs.changeNumber,
+        handler: handler.changeNumber
+    },
+    {
         method: 'GET',
         path: '/api/v1/company/view/{company_id}',
         options: specs.view,

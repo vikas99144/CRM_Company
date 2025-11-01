@@ -16,7 +16,8 @@ module.exports = {
         payload: Joi.object({
             send_for: Joi.string().required().label('OTP send for required'),
             country_code: Joi.string().required().label('Country code is required'),
-            contact_number: Joi.string().required().label('contact number is required')
+            contact_number: Joi.string().required().label('contact number is required'),
+            company_id: Joi.string().optional()
         })
     },
 
@@ -52,6 +53,17 @@ module.exports = {
         })
     },
 
+
+
+    changeNumber: {
+        params: Joi.object({
+            company_id: Joi.string().required().label('Company id is required')
+        }),
+        payload: Joi.object({
+            otp_id: Joi.string().required().label('OTP id is required'),
+            otp: Joi.string().required().label('OTP is required')
+        })
+    },
 
 
     forgotPassword: {

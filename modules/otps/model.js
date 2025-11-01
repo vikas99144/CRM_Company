@@ -7,6 +7,7 @@ const otpSchema = new mongoose.Schema({
     contact_number: { type: String },
     email: { type: String },
     otp_for: { type: String, enum: ["email", "number"], default: "number" },
+    send_for: {type: String, enum:["signup","login","forgot_password","change_number"], default: "signup"},
     is_deleted: { type: Boolean, default: false },
     created_at: { type: Date, default: Date.now, expires: 300 }
 },

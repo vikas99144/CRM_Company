@@ -132,3 +132,12 @@ exports.resetPassword = async (data, h) => {
 }
 
 
+exports.changeNumber = async (data, h) => {
+    let model = Mongoose.models.companies,
+        query = { _id: ObjectId(data.company_id) },
+        updateObj = {country_code: data.country_code, contact_number: data.contact_number },
+        populateQuery = [],
+        selection = "-updated_at -slug -created_at";
+    return await Operation.PATCH(model, query, updateObj, populateQuery, selection);
+}
+

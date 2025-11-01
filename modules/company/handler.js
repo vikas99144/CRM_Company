@@ -14,12 +14,21 @@ const sendOTP = async (request, h) => {
         let payload = request.payload
         let model = Mongoose.models.otps;
         let query = { country_code: payload.country_code, contact_number: payload.contact_number, is_deleted: false };
-        if (payload.send_for == "signup") {
+        if (payload.send_for == "change_number") {
+            query = {
+                _id: { $ne: Utils.ObjectId(payload.company_id) },
+                country_code: payload.country_code,
+                contact_number: payload.contact_number,
+                is_deleted: false
+            };
+        }
+        if (payload.send_for == "signup" || payload.send_for == "change_number") {
             let isExist = await Operation.EXIST(model, query);
             if (isExist) {
                 return Response.validation(h, Lang.COMPANY_ALREADY_EXIST);
             }
         }
+        
         const result = await controller.sendOTP(payload, h);
         return Response.success(h, Lang.OTP_SEND_SUCCESS, result);
     } catch (err) {
@@ -158,6 +167,7 @@ const forgotPassword = async (request, h) => {
         if (!isExist) {
             return Response.validation(h, Lang.COMPANY_NOT_FOUND);
         }
+        payload.send_for = "forgot_password";
         const result = await controller.sendOTP(payload);
         return Response.success(h, Lang.UPDATE_SUCCESS, result);
     } catch (err) {
@@ -169,12 +179,12 @@ const forgotPassword = async (request, h) => {
 const resetPassword = async (request, h) => {
     try {
         let payload = request.payload;
+        let model = Mongoose.models.otps;
         let query = { _id: Utils.ObjectId(payload.otp_id), is_deleted: false };
         let isExist = await Operation.EXIST(model, query);
         if (!isExist) {
             return Response.validation(h, Lang.OTP_EXPIRED);
         }
-
         if (isExist.otp !== payload.otp) {
             return Response.validation(h, Lang.OTP_INVALID);
         }
@@ -187,6 +197,28 @@ const resetPassword = async (request, h) => {
     }
 }
 
+
+const changeNumber = async (request, h) => {
+    try {
+        let payload = request.payload;
+        let model = Mongoose.models.otps;
+        let query = { _id: Utils.ObjectId(payload.otp_id), is_deleted: false };
+        let isExist = await Operation.EXIST(model, query);
+        if (!isExist) {
+            return Response.validation(h, Lang.OTP_EXPIRED);
+        }
+        if (isExist.otp !== payload.otp) {
+            return Response.validation(h, Lang.OTP_INVALID);
+        }
+        payload.country_code = isExist.country_code;
+        payload.contact_number = isExist.contact_number;
+        const result = await controller.changeNumber(payload);
+        return Response.success(h, Lang.NUBER_CHANGE_SUCCESS, result);
+    } catch (err) {
+        return Response.internalServer(h, err.message);
+    }
+}
+
 exports.view = view;
 exports.login = login;
 exports.remove = remove;
@@ -194,7 +226,9 @@ exports.update = update;
 exports.sendOTP = sendOTP;
 exports.register = register;
 exports.verifyOTP = verifyOTP;
+exports.changeNumber = changeNumber;
 exports.resetPassword = resetPassword;
 exports.changePassword = changePassword;
 exports.forgotPassword = forgotPassword;
+
 
