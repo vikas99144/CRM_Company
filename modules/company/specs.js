@@ -184,6 +184,67 @@ module.exports = {
         }
     },
 
+    forgotPassword: {
+        description: 'Forgot Password',
+        notes: 'Forgot Password',
+        tags: ['Company', "api"],
+        plugins: {
+            'hapi-swagger': {
+                responses: {
+                    200: {
+                        description: 'Example of response model in return to success request',
+                        schema: validator.success
+                    },
+                    320: {
+                        description: 'Example of response model in return to failure request',
+                        schema: validator.failure
+                    }
+                }
+            }
+        },
+        pre: [
+            {
+                method: userAuth.checkRoleAccess(["company"]),
+                assign: 'checkRoleAccess'
+            }
+        ],
+        validate: {
+            payload: validator.forgotPassword.payload,
+            failAction: response.failAction
+        }
+    },
+
+
+    resetPassword: {
+        description: 'Reset Password',
+        notes: 'Reset Password',
+        tags: ['Company', "api"],
+        plugins: {
+            'hapi-swagger': {
+                responses: {
+                    200: {
+                        description: 'Example of response model in return to success request',
+                        schema: validator.success
+                    },
+                    320: {
+                        description: 'Example of response model in return to failure request',
+                        schema: validator.failure
+                    }
+                }
+            }
+        },
+        pre: [
+            {
+                method: userAuth.checkRoleAccess(["company"]),
+                assign: 'checkRoleAccess'
+            }
+        ],
+        validate: {
+            payload: validator.resetPassword.payload,
+            failAction: response.failAction
+        }
+    },
+
     view: {
         description: 'View',
         notes: 'View',
@@ -311,7 +372,7 @@ module.exports = {
                 assign: 'token'
             },
             {
-                method: userAuth.checkRoleAccess(["Company"]),
+                method: userAuth.checkRoleAccess(["company"]),
                 assign: 'checkRoleAccess'
             }
         ],

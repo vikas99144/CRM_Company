@@ -60,10 +60,10 @@ const register = async (request, h) => {
         let query = { email: payload.email, is_deleted: false };
         let isExist = await Operation.EXIST(model, query);
         if (isExist) {
-            return Response.validation(h, Lang.ADMIN_EXISTS);
+            return Response.validation(h, Lang.COMPANY_ALREADY_EXIST);
         }
         const result = await controller.register(payload, h);
-        return Response.success(h, Lang.ADMIN_CREATE_SUCCESS, payload);
+        return Response.success(h, Lang.COMPANY_CREATED_SUCCESS, payload);
     } catch (err) {
         console.log(err)
         return Response.internalServer(h, err.message);
@@ -129,19 +129,47 @@ const update = async (request, h) => {
 }
 
 
-
 const changePassword = async (request, h) => {
     try {
         let payload = request.payload;
-        payload.id = request.params.id;
-        payload.slug = Utils.slugify(payload.name);
-        let model = Mongoose.models.roles;
-        let query = { slug: payload.slug, is_deleted: false };
+        payload.company_id = request.params.company_id;
+        let model = Mongoose.models.companies;
+        let query = { _id: ObjectId(payload.company_id), is_deleted: false };
         let isExist = await Operation.EXIST(model, query);
-        if (isExist) {
-            return Response.validation(h, Lang.ROLE_EXISTS);
+        if (!isExist) {
+            return Response.validation(h, Lang.COMPANY_NOT_FOUND);
+        }
+         if (!await compareHash(payload.old_pwd, isExist.pwd)) {
+            return Response.validation(h, Lang.OLD_PASS_NOT_MATCH);
         }
         const result = await controller.update(payload);
+        return Response.success(h, Lang.UPDATE_SUCCESS, result);
+    } catch (err) {
+        return Response.internalServer(h, err.message);
+    }
+}
+
+const forgotPassword = async (request, h) => {
+    try {
+        let payload = request.payload;
+        let model = Mongoose.models.companies;
+        let query = { country_code: payload.country_code, contact_number: payload.contact_number,is_deleted: false };
+        let isExist = await Operation.EXIST(model, query);
+        if (!isExist) {
+            return Response.validation(h, Lang.COMPANY_NOT_FOUND);
+        }
+        const result = await controller.sendOTP(payload);
+        return Response.success(h, Lang.UPDATE_SUCCESS, result);
+    } catch (err) {
+        return Response.internalServer(h, err.message);
+    }
+}
+
+
+const resetPassword = async (request, h) => {
+    try {
+        let payload = request.payload;
+        const result = await controller.resetPassword(payload);
         return Response.success(h, Lang.UPDATE_SUCCESS, result);
     } catch (err) {
         return Response.internalServer(h, err.message);
@@ -155,4 +183,7 @@ exports.update = update;
 exports.sendOTP = sendOTP;
 exports.register = register;
 exports.verifyOTP = verifyOTP;
+exports.resetPassword = resetPassword;
 exports.changePassword = changePassword;
+exports.forgotPassword = forgotPassword;
+

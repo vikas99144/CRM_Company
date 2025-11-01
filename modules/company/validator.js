@@ -38,14 +38,51 @@ module.exports = {
                 .required()
                 .label('Password is required')
                 .messages({
-                    'string.pattern.base': 'Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, one digit, and one special character.'
+                    'string.pattern.base': `Password must be at least 8 characters long and contain at least one uppercase letter, 
+                    one lowercase letter, one digit, and one special character.`
                 }),
             new_pwd: Joi.string()
                 .pattern(new RegExp('^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[#?!@$%^&*-]).{8,}$'))
                 .required()
                 .label('Password is required')
                 .messages({
-                    'string.pattern.base': 'Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, one digit, and one special character.'
+                    'string.pattern.base': `Password must be at least 8 characters long and contain at least one uppercase letter,
+                     one lowercase letter, one digit, and one special character. `
+                })
+        })
+    },
+
+
+
+    forgotPassword: {
+        payload: Joi.object({
+            company_id: Joi.string().required().label('Company id is required'),
+            country_code: Joi.string()
+                .required()
+                .label('Country code is required'),
+            contact_number: Joi.string()
+                .required()
+                .label('Country code is required')
+        })
+    },
+
+
+    resetPassword: {
+        payload: Joi.object({
+            otp_id: Joi.string().required().label('OTP id is required'),
+            country_code: Joi.string()
+                .required()
+                .label('Country code is required'),
+            contact_number: Joi.string()
+                .required()
+                .label('Country code is required'),
+            pwd: Joi.string()
+                .pattern(new RegExp('^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[#?!@$%^&*-]).{8,}$'))
+                .required()
+                .label('Password is required')
+                .messages({
+                    'string.pattern.base': `Password must be at least 8 characters long and contain at least one uppercase letter,
+                     one lowercase letter, one digit, and one special character. `
                 })
         })
     },

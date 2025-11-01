@@ -34,12 +34,18 @@ module.exports = [
         options: specs.changePassword,
         handler: handler.changePassword
     },
-    // {
-    //     method: 'POST',
-    //     path: '/api/v1/company/forgot-password',
-    //     options: specs.forgotPassword,
-    //     handler: handler.forgotPassword
-    // },
+    {
+        method: 'POST',
+        path: '/api/v1/company/forgot-password',
+        options: specs.forgotPassword,
+        handler: handler.forgotPassword
+    },
+    {
+        method: 'POST',
+        path: '/api/v1/company/reset-password',
+        options: specs.resetPassword,
+        handler: handler.resetPassword
+    },
     {
         method: 'GET',
         path: '/api/v1/company/view/{company_id}',

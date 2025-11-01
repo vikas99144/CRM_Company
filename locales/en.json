@@ -3,6 +3,7 @@
 	"NOT_AUTHORIZED": "Not Authorized!",
 	"NAME_IS_REQUIRED": "Name is required!",
 	"INCORRECT_CREDENTIALS": "Incorrect credentials.",
+	"OLD_PASS_NOT_MATCH":"Old password is not matching",
 	"UNAUTHORIZED_ACCESS":"Unauthorized access.",
 	"OTP_EXPIRED": "OTP Expired!",
 	"OTP_INVALID": "Invalid OTP",
@@ -16,6 +17,7 @@
 	"DELETE_SUCCESS": "Deleted successfully.",
 	"ROLE_CREATE_SUCCESS": "Role created successfully.",
 	"ROLE_EXISTS":"Role already exists.",
+	"COMPANY_NOT_FOUND":"Company not found.",
 	"ROLE_NOT_EXIST":"Role not exists.",
 	"USER_NOT_FOUND":"User not found.",
 	"LOGIN_SUCCESS":"Login successfully.",
@@ -23,5 +25,7 @@
 	"COMPANY_ALREADY_EXIST":"Company already exist",
 	"OTP_SEND_SUCCESS":"OTP send successfully.",
 	"CREATE_SUCCESS": "Created successfully.",
-	"ACL_ADD_SUCCESS":"Acl added successfully."
+	"ACL_ADD_SUCCESS":"Acl added successfully.",
+	"COMPANY_CREATED_SUCCESS": "Company created successfully."
+
 }

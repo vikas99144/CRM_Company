@@ -115,9 +115,10 @@ exports.remove = async (data, h) => {
 exports.update = async (data, h) => {
     let model = Mongoose.models.companies,
         query = { _id: ObjectId(data.company_id) },
-        updateObj = { company_name: data.company_name, slug: data.slug },
+        updateObj = { pwd: await getHash(data.new_pwd)},
         populateQuery = [],
         selection = "-updated_at -slug -created_at";
     return await Operation.PATCH(model, query, updateObj, populateQuery, selection);
 }
+
 
