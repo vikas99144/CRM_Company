@@ -70,12 +70,7 @@ module.exports = {
     resetPassword: {
         payload: Joi.object({
             otp_id: Joi.string().required().label('OTP id is required'),
-            country_code: Joi.string()
-                .required()
-                .label('Country code is required'),
-            contact_number: Joi.string()
-                .required()
-                .label('Country code is required'),
+            otp: Joi.string().required().label('OTP is required'),
             pwd: Joi.string()
                 .pattern(new RegExp('^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[#?!@$%^&*-]).{8,}$'))
                 .required()

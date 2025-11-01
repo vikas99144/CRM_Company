@@ -116,7 +116,7 @@ const update = async (request, h) => {
         payload.company_id = request.params.company_id;
         payload.slug = Utils.slugify(payload.company_name);
         let model = Mongoose.models.companies;
-        let query = { slug: payload.slug, _id: {$ne: Utils.ObjectId(payload.company_id)}, is_deleted: false };
+        let query = { slug: payload.slug, _id: { $ne: Utils.ObjectId(payload.company_id) }, is_deleted: false };
         let isExist = await Operation.EXIST(model, query);
         if (isExist) {
             return Response.validation(h, Lang.COMPANY_ALREADY_EXIST);
@@ -139,11 +139,11 @@ const changePassword = async (request, h) => {
         if (!isExist) {
             return Response.validation(h, Lang.COMPANY_NOT_FOUND);
         }
-         if (!await compareHash(payload.old_pwd, isExist.pwd)) {
+        if (!await compareHash(payload.old_pwd, isExist.pwd)) {
             return Response.validation(h, Lang.OLD_PASS_NOT_MATCH);
         }
         const result = await controller.update(payload);
-        return Response.success(h, Lang.UPDATE_SUCCESS, result);
+        return Response.success(h, Lang.OTP_SEND_SUCCESS, result);
     } catch (err) {
         return Response.internalServer(h, err.message);
     }
@@ -153,7 +153,7 @@ const forgotPassword = async (request, h) => {
     try {
         let payload = request.payload;
         let model = Mongoose.models.companies;
-        let query = { country_code: payload.country_code, contact_number: payload.contact_number,is_deleted: false };
+        let query = { country_code: payload.country_code, contact_number: payload.contact_number, is_deleted: false };
         let isExist = await Operation.EXIST(model, query);
         if (!isExist) {
             return Response.validation(h, Lang.COMPANY_NOT_FOUND);
@@ -169,8 +169,19 @@ const forgotPassword = async (request, h) => {
 const resetPassword = async (request, h) => {
     try {
         let payload = request.payload;
+        let query = { _id: Utils.ObjectId(payload.otp_id), is_deleted: false };
+        let isExist = await Operation.EXIST(model, query);
+        if (!isExist) {
+            return Response.validation(h, Lang.OTP_EXPIRED);
+        }
+
+        if (isExist.otp !== payload.otp) {
+            return Response.validation(h, Lang.OTP_INVALID);
+        }
+        payload.country_code = isExist.country_code;
+        payload.contact_number = isExist.contact_number;
         const result = await controller.resetPassword(payload);
-        return Response.success(h, Lang.UPDATE_SUCCESS, result);
+        return Response.success(h, Lang.PASSWORD_RESET_SUCCESS, result);
     } catch (err) {
         return Response.internalServer(h, err.message);
     }
