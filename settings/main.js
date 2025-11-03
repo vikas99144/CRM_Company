@@ -15,3 +15,5 @@ module.exports.configure = async (server) => {
      await server.route(addPrefix(require('../modules/role/router'), prefix));
      await server.route(addPrefix(require('../modules/setting/router'), prefix));
 };
+
+//==
