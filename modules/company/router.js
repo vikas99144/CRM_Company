@@ -4,13 +4,13 @@ const handler = require('./handler');
 const specs = require('./specs');
 
 module.exports = [
-      {
+    {
         method: 'POST',
         path: '/api/v1/company/send-otp',
         options: specs.sendOTP,
         handler: handler.sendOTP
     },
-          {
+    {
         method: 'POST',
         path: '/api/v1/company/verify-otp',
         options: specs.verifyOTP,
@@ -29,22 +29,34 @@ module.exports = [
         handler: handler.login
     },
     {
+        method: 'POST',
+        path: '/api/v1/company/change-password/{company_id}',
+        options: specs.changePassword,
+        handler: handler.changePassword
+    },
+    {
+        method: 'POST',
+        path: '/api/v1/company/forgot-password',
+        options: specs.forgotPassword,
+        handler: handler.forgotPassword
+    },
+    {
+        method: 'POST',
+        path: '/api/v1/company/reset-password',
+        options: specs.resetPassword,
+        handler: handler.resetPassword
+    },
+    {
+        method: 'POST',
+        path: '/api/v1/company/change-number/{company_id}',
+        options: specs.changeNumber,
+        handler: handler.changeNumber
+    },
+    {
         method: 'GET',
         path: '/api/v1/company/view/{company_id}',
         options: specs.view,
         handler: handler.view
-    },
-    {
-        method: 'GET',
-        path: '/api/v1/company/list',
-        options: specs.list,
-        handler: handler.list
-    },
-    {
-        method: 'PATCH',
-        path: '/api/v1/company/status/{company_id}',
-        options: specs.status,
-        handler: handler.status
     },
     {
         method: 'PATCH',

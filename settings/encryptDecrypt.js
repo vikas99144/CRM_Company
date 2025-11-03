@@ -3,14 +3,15 @@
 'use strict'
 
 const CryptoJS = require('crypto-js');
+const Response = require("../response/index");
 const SECRET_KEY = 'yyQV36lzy8k/qUr4hbXXq2bBapVGBZzUtLvshVoQDLj46Uad6PeA4Zk85eKetTbT';
 
 module.exports.configure = async (server) => {
   server.ext('onRequest', (request, h) => {
     console.log(">>>> >>> >>> ===")
     let lastSegment = null;
-    if(request.headers && request.headers["referer"]){
-      lastSegment =  request.headers["referer"].split('/').pop()
+    if (request.headers && request.headers["referer"]) {
+      lastSegment = request.headers["referer"].split('/').pop()
     }
     let data = {};
     if (lastSegment !== "documentation" && request.payload) {
@@ -37,7 +38,6 @@ module.exports.configure = async (server) => {
         request.response.headers["content-type"].includes("application/json")
       ) {
 
-
         let payload;
         if (typeof response.source !== 'undefined') {
           payload = response.source;
@@ -56,6 +56,10 @@ module.exports.configure = async (server) => {
             .response({ data })
             .code(response.statusCode || 200)
             .type('application/json');
+        }
+      } else {
+        if (response.isBoom) {
+          return Response.internalServer(h, response.message)
         }
       }
     } catch (err) {

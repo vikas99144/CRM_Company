@@ -3,10 +3,8 @@
 const Operation = require("../../operations");
 const Mongoose = require("mongoose");
 const { createToken } = require("../../auth/auth");
-const { getHash, count, generateOTP } = require("../../helpers");
 const { ObjectId } = require("../../utils");
-
-
+const { getHash, count, generateOTP } = require("../../helpers");
 
 exports.sendOTP = async (data, h) => {
     let model = Mongoose.models.otps;
@@ -24,7 +22,7 @@ exports.verifyOTP = async (data, h) => {
     let update = { is_deleted: true }
     let result = await Operation.SOFT_DELETE(model, query, update);
     if (data.otp_for == "signup") {
-        let model = Mongoose.models.temp_companies, matchQuery = {};
+        model = Mongoose.models.temp_companies, matchQuery = {};
         matchQuery = { contry_code: result.country_code, contact_number: result.contact_number };
         let aggregateQuery = [
             {
@@ -40,11 +38,11 @@ exports.verifyOTP = async (data, h) => {
             country_code: temp_company[0].country_code,
             contact_number: temp_company[0].contact_number,
             industry: temp_company[0].industry,
-            role: temp_company[0].role,
             pwd: temp_company[0].pwd
         }
+
         let company = await Operation.CREATE(model, createCompany);
-        token = createToken(company._id, company.role);
+        token = createToken(company._id, "company");
         await Operation.HARD_DELETE({ _id: temp_company[0]._id });
         return { 
             otp_for: data.otp_for, 
@@ -72,15 +70,10 @@ exports.register = async (data, h) => {
 exports.login = async (data, h) => {
     try {
         data.token = createToken(data.id, data.role);
-        let model = Mongoose.models.admins,
+        let model = Mongoose.models.companies,
             query = { _id: data.id },
             updateObj = { token: data.token },
-            populateQuery = [
-                {
-                    path: "role",
-                    select: "name slug"
-                }
-            ],
+            populateQuery = [],
             selection = "-updated_at -slug -created_at -token -pwd -is_deleted";
 
         let user = await Operation.PATCH(model, query, updateObj, populateQuery, selection);
@@ -93,31 +86,13 @@ exports.login = async (data, h) => {
 }
 
 exports.view = async (data) => {
-    let model = Mongoose.models.admins, matchQuery = {};
+    let model = Mongoose.models.companies, matchQuery = {};
     matchQuery["$and"] = [];
-    matchQuery["$and"].push({ is_deleted: false, _id: ObjectId(data.admin_id) })
+    matchQuery["$and"].push({ is_deleted: false, _id: ObjectId(data.company_id) })
     let aggregateQuery = [
         {
             $match: matchQuery
         },
-        {
-            $lookup: {
-                from: "roles",
-                let: { role_id: "$role" },
-                pipeline: [
-                    {
-                        $match: {
-                            $expr: { $eq: ["$_id", "$$role_id"] }
-                        }
-                    },
-                    {
-                        $project: { name: 1, slug: 1 }
-                    }
-                ],
-                as: "role"
-            }
-        },
-        { $unwind: { path: "$role", preserveNullAndEmptyArrays: true } },
         {
             $project: {
                 slug: 0,
@@ -130,95 +105,37 @@ exports.view = async (data) => {
     return await Operation.GET(model, aggregateQuery);
 }
 
-
-exports.list = async (data) => {
-    let { page, limit, search, start_date, end_date, role } = data;
-    page = data.page || 1;
-    limit = data.limit || 10;
-    let model = Mongoose.models.admins, matchQuery = {};
-    matchQuery["$and"] = [];
-    matchQuery["$and"].push({ is_deleted: false })
-    if (search) {
-        matchQuery["$or"] = [];
-        matchQuery.push({ name: { $regex: search, $options: "i" } });
-    }
-
-    if (role) {
-        matchQuery["$and"].push({ role: ObjectId(role) });
-    }
-
-    if (start_date) {
-        matchQuery["$and"].push({ created_at: { $gte: start_date } });
-    }
-    if (end_date) {
-        matchQuery["$and"].push({ created_at: { $lte: end_date } });
-    }
-
-    if (start_date && end_date) {
-        matchQuery["$and"].push({ created_at: { $gte: start_date, $lte: end_date } });
-    }
-    let aggregateQuery = [
-        {
-            $match: matchQuery
-        },
-        {
-            $lookup: {
-                from: "roles",
-                let: { role_id: "$role" },
-                pipeline: [
-                    {
-                        $match: {
-                            $expr: { $eq: ["$_id", "$$role_id"] }
-                        }
-                    },
-                    {
-                        $project: { name: 1, slug: 1 }
-                    }
-                ],
-                as: "role"
-            }
-        },
-        { $unwind: { path: "$role", preserveNullAndEmptyArrays: true } },
-        { $sort: { created_at: -1 } },
-        { $skip: (page - 1) * limit },
-        { $limit: parseInt(limit) },
-        {
-            $project: {
-                slug: 0,
-                pwd: 0,
-                is_deleted: 0,
-                token: 0
-            }
-        }
-    ]
-
-    let count = await Operation.TOTAL_COUNT(model, matchQuery);
-    let total = count.length > 0 ? count[0].count : count;
-    let result = await Operation.FILTER(model, aggregateQuery);
-    return { data: result, total: total }
+exports.remove = async (data, h) => {
+    let model = Mongoose.models.companies;
+    let query = { _id: ObjectId(data.company_id) };
+    let updateObj = { is_deleted: true };
+    return await Operation.SOFT_DELETE(model, query, updateObj);
 }
 
-exports.status = async (data, h) => {
-    let model = Mongoose.models.admins,
-        query = { _id: ObjectId(data.admin_id) },
-        updateObj = { status: data.status },
+exports.update = async (data, h) => {
+    let model = Mongoose.models.companies,
+        query = { _id: ObjectId(data.company_id) },
+        updateObj = { pwd: await getHash(data.new_pwd)},
         populateQuery = [],
         selection = "-updated_at -slug -created_at";
     return await Operation.PATCH(model, query, updateObj, populateQuery, selection);
 }
 
 
-exports.remove = async (data, h) => {
-    let model = Mongoose.models.admins;
-    let query = { _id: ObjectId(data.admin_id) };
-    let updateObj = { is_deleted: true };
-    return await Operation.SOFT_DELETE(model, query, updateObj);
+exports.resetPassword = async (data, h) => {
+    let model = Mongoose.models.companies,
+        query = { country_code: data.country_code, contact_number: data.contact_number },
+        updateObj = { pwd: await getHash(data.pwd)},
+        populateQuery = [],
+        selection = "-updated_at -slug -created_at";
+    return await Operation.PATCH(model, query, updateObj, populateQuery, selection);
 }
 
-exports.update = async (data, h) => {
-    let model = Mongoose.models.admins,
-        query = { _id: ObjectId(data.admin_id) },
-        updateObj = { name: data.name, slug: data.slug },
+
+exports.changeNumber = async (data, h) => {
+    let model = Mongoose.models.companies,
+        query = { _id: ObjectId(data.company_id) },
+        updateObj = {country_code: data.country_code, contact_number: data.contact_number },
         populateQuery = [],
         selection = "-updated_at -slug -created_at";
     return await Operation.PATCH(model, query, updateObj, populateQuery, selection);
