@@ -54,3 +54,4 @@ const inventorySchema = new mongoose.Schema(
     },
   }
 );
+
