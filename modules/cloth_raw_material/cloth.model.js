@@ -25,7 +25,7 @@ const inventorySchema = new mongoose.Schema(
                 quantity: { type: Number },
                 length_size: { type: String },
                 cloth_image: { type: String },
-              },
+              }
             ],
           },
         ],
