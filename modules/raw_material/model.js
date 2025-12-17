@@ -1,7 +1,7 @@
 const inventorySchema = new mongoose.Schema(
   {
     org_name: { type: String, required: true },
-    user_id: { type: mongoose.Schema.Types.ObjectId, ref: "users" },
+    company: { type: mongoose.Schema.Types.ObjectId, ref: "companies" },
     gst_no: { type: String, required: true },
     email: { type: String, required: true },
     country_code: { type: String, required: true },
@@ -55,3 +55,4 @@ const inventorySchema = new mongoose.Schema(
   }
 );
 
+module.exports = mongoose.model('raw_materials', inventorySchema, 'raw_materials');
